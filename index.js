@@ -1,10 +1,14 @@
 require("dotenv").config();
+const got = require("got");
 
 const fastify = require("fastify")({
   ignoreTrailingSlash: true,
 });
 
-let auth;
+const json = got.extend({
+  responseType: "json",
+  resolveBodyOnly: true,
+});
 
 fastify.register(require("fastify-sensible"));
 
@@ -19,7 +23,7 @@ fastify.setErrorHandler((err, req, reply) => {
 
 async function handleRequest(request, reply, fn) {
   try {
-    const response = await fn(request.params, request.body);
+    const response = await fn(request.query, request.params, request.body);
     reply.send(response);
   } catch (e) {
     console.error(e);
@@ -31,7 +35,15 @@ fastify.get("/", async (request, reply) => {
   reply.send("OK");
 });
 
-fastify.get("/omdb", async (request, reply) => {});
+fastify.get("/omdb", async (request, reply) => {
+  handleRequest(request, reply, async ({ type, title }) => {
+    const response = await json.get(
+      `https://omdbapi.com/?apikey=${process.env.OMDB_API_KEY}&type=${type}&t=${title}`
+    );
+    console.log(response);
+    return response;
+  });
+});
 
 async function start() {
   try {
