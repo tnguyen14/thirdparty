@@ -1,5 +1,6 @@
 require("dotenv").config();
 const got = require("got");
+const mem = require("mem");
 
 const fastify = require("fastify")({
   ignoreTrailingSlash: true,
@@ -35,13 +36,22 @@ fastify.get("/", async (request, reply) => {
   reply.send("OK");
 });
 
+async function getOMDB(type, title) {
+  const response = await json.get(
+    `https://omdbapi.com/?apikey=${process.env.OMDB_API_KEY}&type=${type}&t=${title}`
+  );
+  console.log(response);
+  return response;
+}
+
+const cachedGetOMDB = mem(getOMDB, {
+  cacheKey: (arguments_) => arguments_.join(","),
+  maxAge: 86400000, // 24 hours in milliseconds
+});
+
 fastify.get("/omdb", async (request, reply) => {
   handleRequest(request, reply, async ({ type, title }) => {
-    const response = await json.get(
-      `https://omdbapi.com/?apikey=${process.env.OMDB_API_KEY}&type=${type}&t=${title}`
-    );
-    console.log(response);
-    return response;
+    return await cachedGetOMDB(type, title);
   });
 });
 
