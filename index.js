@@ -40,7 +40,6 @@ async function getOMDB(type, title) {
   const response = await json.get(
     `https://omdbapi.com/?apikey=${process.env.OMDB_API_KEY}&type=${type}&t=${title}`
   );
-  console.log(response);
   return response;
 }
 
@@ -58,9 +57,7 @@ fastify.get("/omdb", async (request, reply) => {
 async function start() {
   try {
     await fastify.listen(process.env.PORT || 3000, "0.0.0.0");
-    console.log("Server started", {
-      env: process.env,
-    });
+    console.log("Server started");
   } catch (err) {
     console.error(err);
     process.exit(1);
