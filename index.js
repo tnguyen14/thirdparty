@@ -54,6 +54,28 @@ fastify.get("/omdb", async (request, reply) => {
   });
 });
 
+async function extractEmbedly(url) {
+  const response = await json.get(
+    `https://api.embed.ly/1/extract?key=${
+      process.env.EMBEDLY_API_KEY
+    }&url=${encodeURIComponent(url)}&format=json`
+  );
+  if (response.type == "error") {
+    throw new Error(`${response.error_code} - ${response.error_message}`);
+  }
+  return response;
+}
+
+const cachedExtractEmbedly = mem(extractEmbedly, {
+  maxAge: 300000, // cache for 5 minutes
+});
+
+fastify.get("/embedly", async (request, reply) => {
+  handleRequest(request, reply, async ({ url }) => {
+    return await cachedExtractEmbedly(url);
+  });
+});
+
 async function start() {
   try {
     await fastify.listen(process.env.PORT || 3000, "0.0.0.0");
