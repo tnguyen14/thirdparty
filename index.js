@@ -6,6 +6,7 @@ const fastify = require("fastify")({
 
 const omdb = require("./lib/omdb");
 const embedly = require("./lib/embedly");
+const robinhood = require("./lib/robinhood");
 
 fastify.register(require("fastify-sensible"));
 
@@ -20,7 +21,12 @@ fastify.setErrorHandler((err, req, reply) => {
 
 async function handleRequest(request, reply, fn) {
   try {
-    const response = await fn(request.query, request.params, request.body);
+    const response = await fn(
+      request.query,
+      request.params,
+      request.body,
+      request.headers
+    );
     reply.send(response);
   } catch (e) {
     console.error(e);
@@ -41,6 +47,12 @@ fastify.get("/omdb", async (request, reply) => {
 fastify.get("/embedly", async (request, reply) => {
   handleRequest(request, reply, async ({ url }) => {
     return await embedly(url);
+  });
+});
+
+fastify.get("/robinhood/*", async (request, reply) => {
+  handleRequest(request, reply, async (query, params, body, headers) => {
+    return await robinhood(params["*"], headers.authorization);
   });
 });
 
