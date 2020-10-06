@@ -64,6 +64,12 @@ server.get("/plaid/balance", async (request, reply) => {
   });
 });
 
+server.get("/plaid/accounts", async (request, reply) => {
+  handleRequest(request, reply, async () => {
+    return await plaid.accounts();
+  });
+});
+
 async function start() {
   try {
     await server.listen(process.env.PORT || 3000, "0.0.0.0");
