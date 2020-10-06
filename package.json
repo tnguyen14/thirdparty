@@ -17,10 +17,8 @@
   },
   "homepage": "https://github.com/tnguyen14/thirdparty#readme",
   "dependencies": {
+    "@tridnguyen/fastify-server": "^1.4.0",
     "dotenv": "^8.2.0",
-    "fastify": "^2.15.0",
-    "fastify-cors": "^3.0.3",
-    "fastify-sensible": "^2.1.1",
     "got": "^11.3.0",
     "mem": "^6.1.0",
     "plaid": "^7.1.0"
