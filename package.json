@@ -22,7 +22,8 @@
     "fastify-cors": "^3.0.3",
     "fastify-sensible": "^2.1.1",
     "got": "^11.3.0",
-    "mem": "^6.1.0"
+    "mem": "^6.1.0",
+    "plaid": "^7.1.0"
   },
   "devDependencies": {
     "husky": "^4.2.5",

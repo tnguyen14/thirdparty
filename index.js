@@ -7,6 +7,7 @@ const fastify = require("fastify")({
 const omdb = require("./lib/omdb");
 const embedly = require("./lib/embedly");
 const robinhood = require("./lib/robinhood");
+const plaid = require("./lib/plaid");
 
 fastify.register(require("fastify-sensible"));
 
@@ -53,6 +54,12 @@ fastify.get("/embedly", async (request, reply) => {
 fastify.get("/robinhood/*", async (request, reply) => {
   handleRequest(request, reply, async (query, params, body, headers) => {
     return await robinhood(params["*"], headers.authorization);
+  });
+});
+
+fastify.get("/plaid/balance", async (request, reply) => {
+  handleRequest(request, reply, async () => {
+    return await plaid.balance();
   });
 });
 
