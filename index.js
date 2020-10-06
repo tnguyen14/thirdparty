@@ -58,15 +58,21 @@ server.get("/robinhood/*", async (request, reply) => {
   });
 });
 
+server.get("/plaid/accounts", async (request, reply) => {
+  handleRequest(request, reply, async () => {
+    return await plaid.accounts();
+  });
+});
+
 server.get("/plaid/balance", async (request, reply) => {
   handleRequest(request, reply, async () => {
     return await plaid.balance();
   });
 });
 
-server.get("/plaid/accounts", async (request, reply) => {
-  handleRequest(request, reply, async () => {
-    return await plaid.accounts();
+server.get("/plaid/transactions", async (request, reply) => {
+  handleRequest(request, reply, async (query) => {
+    return await plaid.transactions(query);
   });
 });
 
