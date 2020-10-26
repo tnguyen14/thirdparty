@@ -21,59 +21,34 @@ server.setErrorHandler((err, req, reply) => {
   reply.send(err);
 });
 
-async function handleRequest(request, reply, fn) {
-  try {
-    const response = await fn(
-      request.query,
-      request.params,
-      request.body,
-      request.headers
-    );
-    reply.send(response);
-  } catch (e) {
-    console.error(e);
-    reply.send(e);
-  }
-}
-
 server.get("/", async (request, reply) => {
   reply.send("OK");
 });
 
 server.get("/omdb", async (request, reply) => {
-  handleRequest(request, reply, async ({ type, title }) => {
-    return await omdb(type, title);
-  });
+  const { type, title } = request.query;
+  return await omdb(type, title);
 });
 
 server.get("/embedly", async (request, reply) => {
-  handleRequest(request, reply, async ({ url }) => {
-    return await embedly(url);
-  });
+  const { url } = request.query;
+  return await embedly(url);
 });
 
 server.get("/robinhood/*", async (request, reply) => {
-  handleRequest(request, reply, async (query, params, body, headers) => {
-    return await robinhood(params["*"], headers.authorization);
-  });
+  return await robinhood(request.params["*"], request.headers.authorization);
 });
 
 server.get("/plaid/accounts", async (request, reply) => {
-  handleRequest(request, reply, async () => {
-    return await plaid.accounts();
-  });
+  return await plaid.accounts();
 });
 
 server.get("/plaid/balance", async (request, reply) => {
-  handleRequest(request, reply, async () => {
-    return await plaid.balance();
-  });
+  return await plaid.balance();
 });
 
 server.get("/plaid/transactions", async (request, reply) => {
-  handleRequest(request, reply, async (query) => {
-    return await plaid.transactions(query);
-  });
+  return await plaid.transactions(request.query);
 });
 
 async function start() {
