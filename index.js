@@ -13,7 +13,6 @@ const server = require("@tridnguyen/fastify-server")({
 
 const omdb = require("./lib/omdb");
 const embedly = require("./lib/embedly");
-const robinhood = require("./lib/robinhood");
 const plaid = require("./lib/plaid");
 
 server.setErrorHandler((err, req, reply) => {
@@ -33,10 +32,6 @@ server.get("/omdb", async (request, reply) => {
 server.get("/embedly", async (request, reply) => {
   const { url } = request.query;
   return await embedly(url);
-});
-
-server.get("/robinhood/*", async (request, reply) => {
-  return await robinhood(request.params["*"], request.headers.authorization);
 });
 
 server.get("/plaid/accounts", async (request, reply) => {

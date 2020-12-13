@@ -8,7 +8,6 @@
 
 - Embedly `/embedly`
 - OMDB `/omdb`
-- Robinhood `/robinhood`
 - Plaid `/plaid`
   - `/accounts`
   - `/balance`
