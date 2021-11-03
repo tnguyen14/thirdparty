@@ -5,6 +5,7 @@ const server = require("@tridnguyen/fastify-server")({
   auth0ClientId: process.env.AUTH0_CLIENT_ID,
   allowedOrigins: ["https://lab.tridnguyen.com", "https://tridnguyen.com"],
   shouldPerformJwtCheck: (request) => {
+    // TODO change plaid to any future API that needs authentication
     if (request.url.includes("plaid")) {
       return true;
     }
@@ -13,7 +14,6 @@ const server = require("@tridnguyen/fastify-server")({
 
 const omdb = require("./lib/omdb");
 const embedly = require("./lib/embedly");
-const plaid = require("./lib/plaid");
 
 server.setErrorHandler((err, req, reply) => {
   console.log("Default error handler", err);
@@ -32,18 +32,6 @@ server.get("/omdb", async (request, reply) => {
 server.get("/embedly", async (request, reply) => {
   const { url } = request.query;
   return await embedly(url);
-});
-
-server.get("/plaid/accounts", async (request, reply) => {
-  return await plaid.accounts();
-});
-
-server.get("/plaid/balance", async (request, reply) => {
-  return await plaid.balance();
-});
-
-server.get("/plaid/transactions", async (request, reply) => {
-  return await plaid.transactions(request.query);
 });
 
 async function start() {
