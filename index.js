@@ -1,15 +1,9 @@
 require("dotenv").config();
 
 const server = require("@tridnguyen/fastify-server")({
-  auth0Domain: process.env.AUTH0_DOMAIN,
-  auth0ClientId: process.env.AUTH0_CLIENT_ID,
   allowedOrigins: ["https://lab.tridnguyen.com", "https://tridnguyen.com"],
-  shouldPerformJwtCheck: (request) => {
-    // TODO change plaid to any future API that needs authentication
-    if (request.url.includes("plaid")) {
-      return true;
-    }
-  },
+  // no routes currently require authentication
+  shouldPerformJwtCheck: false,
 });
 
 const omdb = require("./lib/omdb");
@@ -36,7 +30,7 @@ server.get("/embedly", async (request, reply) => {
 
 async function start() {
   try {
-    await server.listen(process.env.PORT || 3000, "0.0.0.0");
+    await server.listen({ port: process.env.PORT || 3000, host: "0.0.0.0" });
     console.log("Server started");
   } catch (err) {
     console.error(err);
