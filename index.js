@@ -25,8 +25,8 @@ server.get("/", async (request, reply) => {
 });
 
 server.get("/omdb", async (request, reply) => {
-  const { type, title } = request.query;
-  return await omdb(type, title);
+  const { type, title, year } = request.query;
+  return await omdb(type, title, year);
 });
 
 server.get("/embedly", async (request, reply) => {

@@ -7,4 +7,4 @@
 ### Services
 
 - Embedly `/embedly`
-- OMDB `/omdb`
+- OMDB `/omdb?title=<title>&type=<series|movie>&year=<year>` (`type` and `year` optional)
